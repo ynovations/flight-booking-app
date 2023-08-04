@@ -1,0 +1,36 @@
+<h1>Flight Search</h1>
+
+<!-- Search form with Turbo Streams -->
+<%= form_with(url: flights_path, method: :get, data: { turbo: true, action: "submit->handleSearch" }) do |form| %>
+  <%= form.label :departure_airport_id, 'Departure Airport:' %>
+  <%= form.select :departure_airport_id, options_for_select(@airports.map { |airport| [airport.code, airport.id] }) %>
+  <br>
+  <%= form.label :arrival_airport_id, 'Arrival Airport:' %>
+  <%= form.select :arrival_airport_id, options_for_select(@airports.map { |airport| [airport.code, airport.id] }) %>
+  <br>
+  <%= form.label :num_passengers, 'Number of Passengers:' %>
+  <%= form.select :num_passengers, options_for_select(1..4) %>
+  <br>
+  <%= form.label :flight_date, 'Flight Date:' %>
+  <%= form.select :flight_date, options_for_select(date_dropdown_options) %>
+  <br>
+  <%= form.submit 'Search Flights' %>
+<% end %>
+
+<!-- Display flight results -->
+<% if @flights.present? %>
+  <h2>Flight Results</h2>
+  <ul>
+    <% @flights.each do |flight| %>
+      <li>
+        Flight from <%= flight.departure_airport.code %> to <%= flight.arrival_airport.code %>
+        on <%= flight.flight_date.strftime('%Y-%m-%d') %>
+        with <%= flight.num_passengers %> passengers.
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No flights found.</p>
+<% end %>
+
+
